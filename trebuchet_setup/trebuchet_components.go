@@ -140,7 +140,7 @@ func Phase_3(time float64, Y []float64, simulation_environment types.SimulationE
 }
 
 // Third simulation stop function
-func Proj_Y(Y []float64) bool {
+func Proj_Y(Y []float64, simulation_environment types.SimulationEnvironment) bool {
 	if Y[2] <= 0 {
 		return true
 	} else {

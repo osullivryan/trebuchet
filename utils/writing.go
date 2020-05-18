@@ -12,7 +12,7 @@ import (
 func WriteResults(file_name string, simulation_environment types.SimulationEnvironment, result_arrays ...[][]float64) {
 
 	file, err := os.Create(file_name)
-	utils.CheckError("Cannot create file", err)
+	CheckError("Cannot create file", err)
 	defer file.Close()
 
 	writer := csv.NewWriter(file)
@@ -40,7 +40,7 @@ func WriteResults(file_name string, simulation_environment types.SimulationEnvir
 
 	for _, value := range pos {
 		err := writer.Write(value)
-		utils.CheckError("Cannot write to file", err)
+		CheckError("Cannot write to file", err)
 	}
 
 	defer writer.Flush()

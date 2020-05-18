@@ -58,7 +58,7 @@ func main() {
 	second_phase := ode_solver.Simulation{
 		Functions: types.SimulationFunction{
 			Evaluation_function:       trebuchet_setup.Phase_2,
-			Integration_stop_function: trebuchet_setup.Fy,
+			Integration_stop_function: trebuchet_setup.Launch,
 		},
 		Environments: simulation_environment,
 	}
@@ -66,7 +66,7 @@ func main() {
 	third_phase := ode_solver.Simulation{
 		Functions: types.SimulationFunction{
 			Evaluation_function:       trebuchet_setup.Phase_3,
-			Integration_stop_function: trebuchet_setup.Fy,
+			Integration_stop_function: trebuchet_setup.Proj_Y,
 		},
 		Environments: simulation_environment,
 	}
@@ -85,7 +85,7 @@ func main() {
 
 	fmt.Println("Range: ", y3[len(y3)-1][1])
 
-	utils.WriteResults([][][]float64{y1, y2, y3})
+	utils.WriteResults("results.csv", simulation_environment, y1, y2, y3)
 
 	elapsed := time.Since(start)
 	fmt.Println(elapsed)
