@@ -1,4 +1,4 @@
-package trebuchet
+package trebuchet_setup
 
 import (
 	"math"
