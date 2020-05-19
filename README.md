@@ -1,9 +1,9 @@
 # Trebuchet
 A trebuchet simulator in Golang
-![standard](data/sdr.png)
+![](data/trebuchet_simple.PNG)
 
 
 
 ## Background and Equations of Motion
-![EOM](data/trebuchet_eom.png)
+![](data/trebuchet_eom.PNG)
 
