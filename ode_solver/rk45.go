@@ -193,7 +193,7 @@ func RK45(from, h, to, max_h float64,
 			h = max_h
 		}
 
-		if stop_fn(yk, simulation_environment) {
+		if stop_fn(yk, simulation_environment) == true {
 			break
 		}
 

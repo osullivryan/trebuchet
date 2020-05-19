@@ -20,16 +20,22 @@ import (
 // Sq'
 // ]
 
-//Arm_Mass, CW_Mass, Proj_Mass, Arm_I, CW_I, L_Arm_Lo, L_Arm_CG, L_Arm_Sh, L_Arm_We, L_Sling
+//simulation_environment.Trebuchet.Arm_mass, simulation_environment.Trebuchet.Cw_mass, simulation_environment.Projectile.Proj_mass, simulation_environment.Trebuchet.Arm_i, simulation_environment.Trebuchet.Cw_i, simulation_environment.Trebuchet.L_arm_lo, simulation_environment.Trebuchet.L_arm_cg, simulation_environment.Trebuchet.L_arm_sh, simulation_environment.Trebuchet.L_arm_we, simulation_environment.Trebuchet.L_sling
 
 //First Simulation
 func Phase_1(time float64, Y []float64, simulation_environment types.SimulationEnvironment) []float64 {
 
 	ret := make([]float64, len(Y))
 
-	M11 := (-1.0)*simulation_environment.Projectile.Proj_mass*math.Pow(simulation_environment.Trebuchet.L_arm_lo, 2)*(-1+2*math.Sin(Y[0])*math.Cos(Y[0])/math.Sin(Y[0]+Y[4])) + simulation_environment.Trebuchet.Arm_i + simulation_environment.Trebuchet.Cw_i + simulation_environment.Trebuchet.Arm_mass*math.Pow(simulation_environment.Trebuchet.L_arm_cg, 2) + simulation_environment.Projectile.Proj_mass*math.Pow(simulation_environment.Trebuchet.L_arm_lo, 2)*math.Pow(math.Sin(Y[0]), 2)/math.Pow(math.Sin(Y[0]+Y[4]), 2) + simulation_environment.Trebuchet.Cw_mass*(math.Pow(simulation_environment.Trebuchet.L_arm_sh, 2)+math.Pow(simulation_environment.Trebuchet.L_arm_we, 2)+2*simulation_environment.Trebuchet.L_arm_sh*simulation_environment.Trebuchet.L_arm_we*math.Cos(Y[2]))
+	M11 := (-1.0)*simulation_environment.Projectile.Proj_mass*math.Pow(simulation_environment.Trebuchet.L_arm_lo, 2)*
+		(-1+2*math.Sin(Y[0])*math.Cos(Y[0])/math.Sin(Y[0]+Y[4])) + simulation_environment.Trebuchet.Arm_i + simulation_environment.Trebuchet.Cw_i +
+		simulation_environment.Trebuchet.Arm_mass*math.Pow(simulation_environment.Trebuchet.L_arm_cg, 2) +
+		simulation_environment.Projectile.Proj_mass*math.Pow(simulation_environment.Trebuchet.L_arm_lo, 2)*math.Pow(math.Sin(Y[0]), 2)/math.Pow(math.Sin(Y[0]+Y[4]), 2) +
+		simulation_environment.Trebuchet.Cw_mass*(math.Pow(simulation_environment.Trebuchet.L_arm_sh, 2)+math.Pow(simulation_environment.Trebuchet.L_arm_we, 2)+
+			2*simulation_environment.Trebuchet.L_arm_sh*simulation_environment.Trebuchet.L_arm_we*math.Cos(Y[2]))
 
-	M12 := simulation_environment.Trebuchet.Cw_i + simulation_environment.Trebuchet.L_arm_we*simulation_environment.Trebuchet.Cw_mass*(simulation_environment.Trebuchet.L_arm_we+simulation_environment.Trebuchet.L_arm_sh*math.Cos(Y[2]))
+	M12 := simulation_environment.Trebuchet.Cw_i + simulation_environment.Trebuchet.L_arm_we*
+		simulation_environment.Trebuchet.Cw_mass*(simulation_environment.Trebuchet.L_arm_we+simulation_environment.Trebuchet.L_arm_sh*math.Cos(Y[2]))
 
 	M21 := M12
 
@@ -110,15 +116,13 @@ func Phase_2(time float64, Y []float64, simulation_environment types.SimulationE
 
 }
 
-// Second simulation stop function
-var cnt int = 0
-
 // Velocity vector > launch angle
 func Launch(Y []float64, simulation_environment types.SimulationEnvironment) bool {
 	xV := -simulation_environment.Trebuchet.L_sling*math.Cos(Y[0]+Y[4])*(Y[1]+Y[5]) - simulation_environment.Trebuchet.L_arm_lo*math.Cos(Y[0])*Y[1]
 	yV := -simulation_environment.Trebuchet.L_sling*math.Sin(Y[0]+Y[4])*(Y[1]+Y[5]) - simulation_environment.Trebuchet.L_arm_lo*math.Sin(Y[0])*Y[1]
 
 	cur_angle := math.Atan(yV / xV)
+
 	if simulation_environment.Trebuchet.Rel_angle-0.1 <= cur_angle && cur_angle <= simulation_environment.Trebuchet.Rel_angle+0.1 && yV > 0.0 && xV > 0.0 {
 		return true
 	} else {
@@ -130,11 +134,17 @@ func Launch(Y []float64, simulation_environment types.SimulationEnvironment) boo
 func Phase_3(time float64, Y []float64, simulation_environment types.SimulationEnvironment) []float64 {
 
 	ret := make([]float64, len(Y))
+	ro := simulation_environment.Global.Ro
+	Cd := simulation_environment.Projectile.Cd
+	Area := simulation_environment.Projectile.Area
+	Wind_v := simulation_environment.Global.Wind_v
+	Proj_Mass := simulation_environment.Projectile.Proj_mass
+	g := simulation_environment.Global.G
 
 	ret[0] = Y[1]
-	ret[1] = -(simulation_environment.Global.Ro * simulation_environment.Projectile.Cd * simulation_environment.Projectile.Area * (Y[1] - simulation_environment.Global.Wind_v) * math.Sqrt(math.Pow(Y[3], 2)+math.Pow((simulation_environment.Global.Wind_v-Y[1]), 2))) / (2 * simulation_environment.Projectile.Proj_mass)
+	ret[1] = -(ro * Cd * Area * (Y[1] - Wind_v) * math.Sqrt(math.Pow(Y[3], 2)+math.Pow((Wind_v-Y[1]), 2))) / (2 * Proj_Mass)
 	ret[2] = Y[3]
-	ret[3] = -simulation_environment.Global.G - (simulation_environment.Global.Ro*simulation_environment.Projectile.Cd*simulation_environment.Projectile.Area*Y[3]*math.Sqrt(math.Pow(Y[3], 2)+math.Pow((simulation_environment.Global.Wind_v-Y[1]), 2)))/(2*simulation_environment.Projectile.Proj_mass)
+	ret[3] = -g - (ro*Cd*Area*Y[3]*math.Sqrt(math.Pow(Y[3], 2)+math.Pow((Wind_v-Y[1]), 2)))/(2*Proj_Mass)
 
 	return ret
 }
