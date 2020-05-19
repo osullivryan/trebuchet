@@ -27,9 +27,15 @@ func Phase_1(time float64, Y []float64, simulation_environment types.SimulationE
 
 	ret := make([]float64, len(Y))
 
-	M11 := (-1.0)*simulation_environment.Projectile.Proj_mass*math.Pow(simulation_environment.Trebuchet.L_arm_lo, 2)*(-1+2*math.Sin(Y[0])*math.Cos(Y[0])/math.Sin(Y[0]+Y[4])) + simulation_environment.Trebuchet.Arm_i + simulation_environment.Trebuchet.Cw_i + simulation_environment.Trebuchet.Arm_mass*math.Pow(simulation_environment.Trebuchet.L_arm_cg, 2) + simulation_environment.Projectile.Proj_mass*math.Pow(simulation_environment.Trebuchet.L_arm_lo, 2)*math.Pow(math.Sin(Y[0]), 2)/math.Pow(math.Sin(Y[0]+Y[4]), 2) + simulation_environment.Trebuchet.Cw_mass*(math.Pow(simulation_environment.Trebuchet.L_arm_sh, 2)+math.Pow(simulation_environment.Trebuchet.L_arm_we, 2)+2*simulation_environment.Trebuchet.L_arm_sh*simulation_environment.Trebuchet.L_arm_we*math.Cos(Y[2]))
+	M11 := (-1.0)*simulation_environment.Projectile.Proj_mass*math.Pow(simulation_environment.Trebuchet.L_arm_lo, 2)*
+		(-1+2*math.Sin(Y[0])*math.Cos(Y[0])/math.Sin(Y[0]+Y[4])) + simulation_environment.Trebuchet.Arm_i + simulation_environment.Trebuchet.Cw_i +
+		simulation_environment.Trebuchet.Arm_mass*math.Pow(simulation_environment.Trebuchet.L_arm_cg, 2) +
+		simulation_environment.Projectile.Proj_mass*math.Pow(simulation_environment.Trebuchet.L_arm_lo, 2)*math.Pow(math.Sin(Y[0]), 2)/math.Pow(math.Sin(Y[0]+Y[4]), 2) +
+		simulation_environment.Trebuchet.Cw_mass*(math.Pow(simulation_environment.Trebuchet.L_arm_sh, 2)+math.Pow(simulation_environment.Trebuchet.L_arm_we, 2)+
+			2*simulation_environment.Trebuchet.L_arm_sh*simulation_environment.Trebuchet.L_arm_we*math.Cos(Y[2]))
 
-	M12 := simulation_environment.Trebuchet.Cw_i + simulation_environment.Trebuchet.L_arm_we*simulation_environment.Trebuchet.Cw_mass*(simulation_environment.Trebuchet.L_arm_we+simulation_environment.Trebuchet.L_arm_sh*math.Cos(Y[2]))
+	M12 := simulation_environment.Trebuchet.Cw_i + simulation_environment.Trebuchet.L_arm_we*
+		simulation_environment.Trebuchet.Cw_mass*(simulation_environment.Trebuchet.L_arm_we+simulation_environment.Trebuchet.L_arm_sh*math.Cos(Y[2]))
 
 	M21 := M12
 
@@ -109,9 +115,6 @@ func Phase_2(time float64, Y []float64, simulation_environment types.SimulationE
 	return ret
 
 }
-
-// Second simulation stop function
-var cnt int = 0
 
 // Velocity vector > launch angle
 func Launch(Y []float64, simulation_environment types.SimulationEnvironment) bool {
